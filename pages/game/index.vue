@@ -18,7 +18,10 @@
           }"
         @click="onSelectLetter(letter)"
       >
-        {{ letter }}
+        {{ letter }} <span
+          v-if="uppercase"
+          class="lowercase"
+        >{{ letter }}</span>
       </li>
     </ul>
     <div v-else>
@@ -95,10 +98,13 @@
     v-if="preLoadingStage"
     class="fixed top-0 right-0 bottom-0 left-0 z-20 bg-black bg-opacity-90 flex items-center justify-center"
   >
-    <div class="text-4xl text-black uppercase font-bold">
+    <div class="text-4xl text-black uppercase">
       <div class="relative">
         <div class="bg-neutral-100 w-32 h-32 flex items-center justify-center text-5xl border border-2 hover:border-blue-500 transition duration-200 cursor-pointer">
-          {{ selectedLetter }}
+          {{ selectedLetter }} <span
+            v-if="uppercase"
+            class="lowercase"
+          >{{ selectedLetter }}</span>
         </div>
         <div class="absolute top-2 right-2 flex items-center justify-center">
           <svg

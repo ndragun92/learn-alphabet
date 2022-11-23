@@ -133,5 +133,6 @@ function onReset() {
 
 function onSave() {
   localStorage.setItem('selected_letters', JSON.stringify(selectedLetters.data.sort()))
+  alert('Saved changes')
 }
 </script>
