@@ -156,7 +156,8 @@ onMounted(() => {
 
 function onPlay(reset = false) {
   if(usedLetters.data.length === alphabet.data.length) {
-    const endAudio = new Audio(`effects/end.wav`);
+    const audioPath = new URL(`/assets/audio/effects/end.wav`, import.meta.url).href;
+    const endAudio = new Audio(audioPath);
     endAudio?.play();
     currentLetter.value = ''
     usedLetters.data = []
@@ -173,7 +174,8 @@ function onPlay(reset = false) {
     usedLetters.data.push(letter)
     console.log('letter', letter);
     currentLetter.value = letter
-    audio.value = new Audio(`letters/${letter}.wav`);
+    const audioPath = new URL(`/assets/audio/letters/${letter}.wav`, import.meta.url).href;
+    audio.value = new Audio(audioPath);
     audio.value?.play();
   }
 }
@@ -191,19 +193,21 @@ function onSelectLetter(letter: string) {
     console.log('WRONG');
     wrongAnswers.data.push(letter)
     wrongAnswersHistory.data.push(letter)
-    const lostAudio = new Audio(`effects/lost.wav`);
+    const audioPath = new URL(`/assets/audio/effects/lost.wav`, import.meta.url).href;
+    const lostAudio = new Audio(audioPath);
     lostAudio?.play();
   } else {
     loadingStage.value = true
     console.log('CORRECT');
     correctAnswersHistory.data.push(letter)
     wrongAnswers.data = []
-    const wonAudio = new Audio(`effects/won.wav`);
+    const audioPath = new URL(`/assets/audio/effects/won.wav`, import.meta.url).href;
+    const wonAudio = new Audio(audioPath);
     wonAudio?.play();
     setTimeout(() => {
       loadingStage.value = false
       onPlay()
-    }, 3000)
+    }, 3500)
   }
 }
 
