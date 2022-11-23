@@ -218,9 +218,9 @@ function onRandomize() {
 
 function onSelectLetter(letter: string) {
   preLoadingStage.value = true
-  const audioPathSelected = new URL(`/assets/audio/effects/selected.mp3`, import.meta.url).href;
-  const selectedLetterAudioEffect = new Audio(audioPathSelected);
-  selectedLetterAudioEffect?.play();
+  // const audioPathSelected = new URL(`/assets/audio/effects/selected.mp3`, import.meta.url).href;
+  // const selectedLetterAudioEffect = new Audio(audioPathSelected);
+  // selectedLetterAudioEffect?.play();
 
   setTimeout(() => {
     const audioPathLetter = new URL(`/assets/audio/letters/${letter}.wav`, import.meta.url).href;
@@ -234,6 +234,7 @@ function onSelectLetter(letter: string) {
         const audioPath = new URL(`/assets/audio/effects/lost.wav`, import.meta.url).href;
         const lostAudio = new Audio(audioPath);
         lostAudio?.play();
+        preLoadingStage.value = false
       } else {
         loadingStage.value = true
         preLoadingStage.value = false
@@ -252,7 +253,7 @@ function onSelectLetter(letter: string) {
         }, 3500)
       }
     }, 2000)
-  }, 3500)
+  }, 0)
 
 
   // if(letter !== currentLetter.value) {
