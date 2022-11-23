@@ -10,7 +10,7 @@
       <li
         v-for="letter in alphabet.data"
         :key="letter"
-        class="bg-neutral-100 w-32 h-32 flex items-center justify-center text-5xl border border-2"
+        class="bg-neutral-100 w-32 h-32 flex items-center justify-center text-5xl border border-2 hover:border-blue-500 transition duration-200 cursor-pointer"
         :class="
           { uppercase ,
             'border-red-500' : wrongAnswers.data.includes(letter),
@@ -96,26 +96,33 @@
     class="fixed top-0 right-0 bottom-0 left-0 z-20 bg-black bg-opacity-90 flex items-center justify-center"
   >
     <div class="text-4xl text-black uppercase font-bold">
-      <svg
-        class="animate-spin h-12 w-12 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        />
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        />
-      </svg>
+      <div class="relative">
+        <div class="bg-neutral-100 w-32 h-32 flex items-center justify-center text-5xl border border-2 hover:border-blue-500 transition duration-200 cursor-pointer">
+          {{ selectedLetter }}
+        </div>
+        <div class="absolute top-2 right-2 flex items-center justify-center">
+          <svg
+            class="animate-spin h-6 w-6 text-black"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
   <div
@@ -142,6 +149,7 @@ const uppercase = ref(true)
 const playing = ref(false)
 const audio = ref<null | HTMLAudioElement>(null)
 const currentLetter = ref('')
+const selectedLetter = ref('')
 
 const alphabet = reactive<{data: string[]}>({
   data: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -183,17 +191,19 @@ onMounted(() => {
 })
 
 function onPlay(reset = false) {
+  if(reset) {
+    wrongAnswersHistory.data = []
+    correctAnswersHistory.data = []
+    selectedLetter.value = ''
+  }
   if(usedLetters.data.length === alphabet.data.length) {
     const audioPath = new URL(`/assets/audio/effects/end.wav`, import.meta.url).href;
     const endAudio = new Audio(audioPath);
     endAudio?.play();
     currentLetter.value = ''
+    selectedLetter.value = ''
     usedLetters.data = []
     wrongAnswers.data = []
-    if(reset) {
-      wrongAnswersHistory.data = []
-      correctAnswersHistory.data = []
-    }
     playing.value = false
   } else {
     playing.value = true
@@ -217,6 +227,7 @@ function onRandomize() {
 }
 
 function onSelectLetter(letter: string) {
+  selectedLetter.value = letter
   preLoadingStage.value = true
   // const audioPathSelected = new URL(`/assets/audio/effects/selected.mp3`, import.meta.url).href;
   // const selectedLetterAudioEffect = new Audio(audioPathSelected);
