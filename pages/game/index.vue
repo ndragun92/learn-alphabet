@@ -189,26 +189,63 @@ function onRandomize() {
 }
 
 function onSelectLetter(letter: string) {
-  if(letter !== currentLetter.value) {
-    console.log('WRONG');
-    wrongAnswers.data.push(letter)
-    wrongAnswersHistory.data.push(letter)
-    const audioPath = new URL(`/assets/audio/effects/lost.wav`, import.meta.url).href;
-    const lostAudio = new Audio(audioPath);
-    lostAudio?.play();
-  } else {
-    loadingStage.value = true
-    console.log('CORRECT');
-    correctAnswersHistory.data.push(letter)
-    wrongAnswers.data = []
-    const audioPath = new URL(`/assets/audio/effects/won.wav`, import.meta.url).href;
-    const wonAudio = new Audio(audioPath);
-    wonAudio?.play();
+
+  const audioPathSelected = new URL(`/assets/audio/effects/selected.mp3`, import.meta.url).href;
+  const selectedLetterAudioEffect = new Audio(audioPathSelected);
+  selectedLetterAudioEffect?.play();
+
+  setTimeout(() => {
+    const audioPathLetter = new URL(`/assets/audio/letters/${letter}.wav`, import.meta.url).href;
+    const selectedLetterAudio = new Audio(audioPathLetter);
+    selectedLetterAudio?.play();
     setTimeout(() => {
-      loadingStage.value = false
-      onPlay()
-    }, 3500)
-  }
+      if(letter !== currentLetter.value) {
+        console.log('WRONG');
+        wrongAnswers.data.push(letter)
+        wrongAnswersHistory.data.push(letter)
+        const audioPath = new URL(`/assets/audio/effects/lost.wav`, import.meta.url).href;
+        const lostAudio = new Audio(audioPath);
+        lostAudio?.play();
+      } else {
+        loadingStage.value = true
+        console.log('CORRECT');
+        correctAnswersHistory.data.push(letter)
+        wrongAnswers.data = []
+        const audioPath = new URL(`/assets/audio/effects/won.wav`, import.meta.url).href;
+        const wonAudio = new Audio(audioPath);
+        wonAudio?.play();
+        setTimeout(() => {
+          wonAudio?.pause()
+          loadingStage.value = false
+          nextTick(() => {
+            onPlay()
+          })
+        }, 3500)
+      }
+    }, 2000)
+  }, 3500)
+
+
+  // if(letter !== currentLetter.value) {
+  //   console.log('WRONG');
+  //   wrongAnswers.data.push(letter)
+  //   wrongAnswersHistory.data.push(letter)
+  //   const audioPath = new URL(`/assets/audio/effects/lost.wav`, import.meta.url).href;
+  //   const lostAudio = new Audio(audioPath);
+  //   lostAudio?.play();
+  // } else {
+  //   loadingStage.value = true
+  //   console.log('CORRECT');
+  //   correctAnswersHistory.data.push(letter)
+  //   wrongAnswers.data = []
+  //   const audioPath = new URL(`/assets/audio/effects/won.wav`, import.meta.url).href;
+  //   const wonAudio = new Audio(audioPath);
+  //   wonAudio?.play();
+  //   setTimeout(() => {
+  //     loadingStage.value = false
+  //     onPlay()
+  //   }, 3500)
+  // }
 }
 
 function shuffle(array: string[]) {
