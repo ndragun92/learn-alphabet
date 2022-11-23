@@ -14,7 +14,7 @@
         :class="
           { uppercase ,
             'border-red-500' : wrongAnswers.data.includes(letter),
-        
+
           }"
         @click="onSelectLetter(letter)"
       >
@@ -92,6 +92,33 @@
     </div>
   </div>
   <div
+    v-if="preLoadingStage"
+    class="fixed top-0 right-0 bottom-0 left-0 z-20 bg-black bg-opacity-90 flex items-center justify-center"
+  >
+    <div class="text-4xl text-black uppercase font-bold">
+      <svg
+        class="animate-spin h-12 w-12 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        />
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    </div>
+  </div>
+  <div
     v-if="loadingStage"
     class="fixed top-0 right-0 bottom-0 left-0 z-20 bg-green-500 bg-opacity-90 flex items-center justify-center"
   >
@@ -109,6 +136,7 @@ export default {
 
 <script lang="ts" setup>
 const loading = ref(true)
+const preLoadingStage = ref(false)
 const loadingStage = ref(false)
 const uppercase = ref(true)
 const playing = ref(false)
@@ -189,7 +217,7 @@ function onRandomize() {
 }
 
 function onSelectLetter(letter: string) {
-
+  preLoadingStage.value = true
   const audioPathSelected = new URL(`/assets/audio/effects/selected.mp3`, import.meta.url).href;
   const selectedLetterAudioEffect = new Audio(audioPathSelected);
   selectedLetterAudioEffect?.play();
@@ -208,6 +236,7 @@ function onSelectLetter(letter: string) {
         lostAudio?.play();
       } else {
         loadingStage.value = true
+        preLoadingStage.value = false
         console.log('CORRECT');
         correctAnswersHistory.data.push(letter)
         wrongAnswers.data = []
